@@ -1,15 +1,10 @@
-# using streamlit to build a real-time demo of YOLO model
+
 import streamlit as st
 import cv2
 import pandas as pd
 import os,glob
 import numpy as np
 import torch
-#import time ,sys
-#from streamlit_embedcode import github_gist
-#import urllib.request
-#import urllib
-#import moviepy.editor as moviepy
 import copy
 
 from fastai.vision.core import *
@@ -21,13 +16,23 @@ from PIL import ImageFont
 from PIL import ImageDraw
 from PIL import Image
 from shapely.geometry import Polygon
+import requests
+import shutil
+from tqdm import tqdm
 
-waterway_model_file='model_version_1.pth'
-learn_inf = load_learner(waterway_model_file)
-save_path='/image/'
-classes=learn_inf.dls.train.after_item.vocab
-scale=round((5.36+6.65+7.77)/3)
-unit=scale**2/10000
+
+def download_file(url,filename,path=None):
+    #local_filename = url.split('/')[-1]
+    if path:
+        local_filename = path.joinpath(filename)
+    else:    
+        local_filename = filename
+    r=requests.get(url, stream=True)
+    file_size = int(r.headers.get('Content-Length', 0))
+    with open(local_filename, 'wb') as f:
+        with tqdm.wrapattr(r.raw, "read", total=file_size ) as r_raw:
+            shutil.copyfileobj(r_raw, f)          
+    return r.status_code  
 
 
 def get_label_image(fpath,imgfile):
@@ -101,20 +106,17 @@ def mask_to_polygon(maskfile):
 
 
 
-def object_detection_image():
+def object_detection_image(file):
     st.title('Waterway Detection for Images')
     st.subheader("""
     This app will detect the waterway in an image and outputs the image with polygons.
     """)
-    file = st.file_uploader('Upload Image', type = ['jpg','png','jpeg'])
+    #file = st.file_uploader('Upload Image', type = ['jpg','png','jpeg'])
     if file!= None:
-        st.write("Image Uploaded Successfully:")
+        #st.write("Image Uploaded Successfully:")
         img=PILImage.create(file)
-        
-        st.image(img, caption = "Uploaded Image")
+        #st.image(img, caption = "Uploaded Image")
         my_bar = st.progress(0)
-        #confThreshold =st.slider('Confidence', 0, 100, 50)
-        #nmsThreshold= st.slider('Threshold', 0, 100, 20)
 
         pred = learn_inf.predict(img)
         test=pred[0].numpy()
@@ -145,14 +147,15 @@ def object_detection_image():
               cy = x.representative_point().y
               draw.text((cx,cy), '{:8.1f}'.format(x.area*unit), stroke_fill=(255, 0, 0),fill=255,font=font)
               area.append(x.area)
-            img2.save(save_path/'imagesave.png')
+              #img2.save(save_path/'imagesave.png')
         else:
           print('no results')
-        df= pd.DataFrame(list(zip(obj_list,area)),columns=['Object Name','Area'])
+          
+       # df= pd.DataFrame(list(zip(obj_list,area)),columns=['Object Name','Area'])
         #df= pd.DataFrame(list(zip(obj_list,confi_list)),columns=['Object Name','Confidence'])
         
-        if st.checkbox("Show Object's list" ): 
-            st.write(df)
+#        if st.checkbox("Show Object's list" ): 
+#            st.write(df)
 #        if st.checkbox("Show Confidence bar chart" ):
 #            st.subheader('Bar chart for confidence levels')
 #            st.bar_chart(df["Area"]) 
@@ -165,7 +168,7 @@ def object_detection_image():
 
 
 def main():
-#    new_title = '<p style="font-size: 42px;">Welcome to water wat detection demo </p>'
+    new_title = '<p style="font-size: 42px;">Demo: welcome to waterway detection </p>'
 #    read_me_0 = st.markdown(new_title, unsafe_allow_html=True)
 
 #    read_me = st.markdown("""
@@ -173,40 +176,38 @@ def main():
 #    )
 #    st.sidebar.title("Select Activity")
 #    choice  = st.sidebar.selectbox("MODE",("About","Detection(Image)","(Coming soon) Detection(Video)"))
-       
-    if st.button('Classify'):
-        object_detection_image()
-        #pred, pred_idx, probs = learn_inf.predict(img)
-        #st.write(f'Prediction: {pred}; Probability: {probs[pred_idx]:.04f}')
+    st.write(f'Prepare the Model, please wait!') 
+    waterway_model_file='model_version_1.pkl'
+    url='https://www.dropbox.com/s/1khic5wgtwzf2x7/model_v1.pkl?dl=0'
+    url=url.replace('0','1') ## dl=1 is important
+    
+    loadfile=download_file(url,filename=waterway_model_file)
+    if loadfile == 200:
+#        print('Successful download')
+        st.write(f'Successful download') 
     else: 
-        st.write(f'Click the button to classify') 
-'''    
-    if choice == "Object Detection(Image)":
-        #st.subheader("Object Detection")
-        read_me_0.empty()
-        read_me.empty()
-        #st.title('Object Detection')
-        object_detection_image()
-    elif choice == "Object Detection(Video)":
-        read_me_0.empty()
-        read_me.empty()
-        #object_detection_video.has_beenCalled = False
-        object_detection_video()
-        #if object_detection_video.has_beenCalled:
-        try:
+        print('Error')
 
-            clip = moviepy.VideoFileClip('detected_video.mp4')
-            clip.write_videofile("myvideo.mp4")
-            st_video = open('myvideo.mp4','rb')
-            video_bytes = st_video.read()
-            st.video(video_bytes)
-            st.write("Detected Video") 
-        except OSError:
-            ''
+    learn_inf = load_learner(waterway_model_file)
+    save_path='/image/'
+    font = ImageFont.truetype('arial',30)
+    classes=learn_inf.dls.train.after_item.vocab
+    scale=round((5.36+6.65+7.77)/3)
+    unit=scale**2/10000
+    
+    file = st.file_uploader('Upload Image (One image)', type = ['jpg','png','jpeg'])
+    if file!= None:
+        st.write("Image Uploaded Successfully:")
+        img=Image.open(file)
+        st.image(img, caption = "Uploaded Image")
+        if st.button('Classify'):
+            object_detection_image(file)
+            #pred, pred_idx, probs = learn_inf.predict(img)
+            #st.write(f'Prediction: {pred}; Probability: {probs[pred_idx]:.04f}')
+        else : 
+            st.write(f'Click the button to classify')
 
-    elif choice == "About":
-        print()
-'''        
+       
 
 if __name__ == '__main__':
 		main()	
