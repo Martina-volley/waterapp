@@ -177,13 +177,14 @@ def object_detection_image(file,learn):
 
 def main():
     new_title = '<p style="font-size: 42px;">Demo: welcome to waterway detection </p>'
-#    read_me_0 = st.markdown(new_title, unsafe_allow_html=True)
+    read_me_0 = st.markdown(new_title, unsafe_allow_html=True)
 
 #    read_me = st.markdown("""
 #    This Web app is for image model demo and test usage!"""
 #    )
 #    st.sidebar.title("Select Activity")
 #    choice  = st.sidebar.selectbox("MODE",("About","Detection(Image)","(Coming soon) Detection(Video)"))
+    read_me_0.empty()
     st.write(f'Prepare the Model, please wait!') 
     waterway_model_file='model_version_1.pkl'
     url='https://www.dropbox.com/s/1khic5wgtwzf2x7/model_v1.pkl?dl=0'
