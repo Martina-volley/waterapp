@@ -106,7 +106,7 @@ def mask_to_polygon(maskfile):
 
 
 
-def object_detection_image(file):
+def object_detection_image(file,learn):
     st.title('Waterway Detection for Images')
     st.subheader("""
     This app will detect the waterway in an image and outputs the image with polygons.
@@ -118,7 +118,7 @@ def object_detection_image(file):
         #st.image(img, caption = "Uploaded Image")
         my_bar = st.progress(0)
 
-        pred = learn_inf.predict(img)
+        pred = learn.predict(img)
         test=pred[0].numpy()
         test[test == 1]=60
         test[test == 2]=60*2
@@ -201,7 +201,7 @@ def main():
         img=Image.open(file)
         st.image(img, caption = "Uploaded Image")
         if st.button('Classify'):
-            object_detection_image(file)
+            object_detection_image(file,learn_inf)
             #pred, pred_idx, probs = learn_inf.predict(img)
             #st.write(f'Prediction: {pred}; Probability: {probs[pred_idx]:.04f}')
         else : 
