@@ -113,6 +113,8 @@ def mask_to_polygon(maskfile):
 
 
 def object_detection_image(file,learn):
+    scale=round((5.36+6.65+7.77)/3)
+    unit=scale**2/10000
     st.title('Waterway Detection for Images')
     st.subheader("""
     This app will detect the waterway in an image and outputs the image with polygons.
@@ -151,7 +153,7 @@ def object_detection_image(file,learn):
           for x in polys:
               cx = x.representative_point().x
               cy = x.representative_point().y
-              draw.text((cx,cy), '{:8.1f}'.format(x.area*unit), stroke_fill=(255, 0, 0),fill=255,font=font)
+              draw.text((cx,cy), '{:8.1f}'.format(x.area*unit), stroke_fill=(255, 0, 0),fill=255)#,font=font)
               area.append(x.area)
               #img2.save(save_path/'imagesave.png')
         else:
@@ -198,8 +200,8 @@ def main():
     save_path='/image/'
     #font = ImageFont.truetype('arial',30)
     classes=learn_inf.dls.train.after_item.vocab
-    scale=round((5.36+6.65+7.77)/3)
-    unit=scale**2/10000
+    #scale=round((5.36+6.65+7.77)/3)
+    #unit=scale**2/10000
     
     file = st.file_uploader('Upload Image (One image)', type = ['jpg','png','jpeg'])
     if file!= None:
