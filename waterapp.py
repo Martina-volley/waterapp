@@ -190,7 +190,7 @@ def main():
 
     learn_inf = load_learner(waterway_model_file)
     save_path='/image/'
-    font = ImageFont.truetype('arial',30)
+    #font = ImageFont.truetype('arial',30)
     classes=learn_inf.dls.train.after_item.vocab
     scale=round((5.36+6.65+7.77)/3)
     unit=scale**2/10000
