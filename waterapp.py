@@ -99,9 +99,15 @@ def mask_to_polygon(maskfile):
         #print(cv2.contourArea(poly))
         s=poly.tolist()
         s=[ x[0]  for x in s]
-        polygon = Polygon(s)
-        area.append(polygon.area)
-        polygons.append(polygon)
+        try:
+          polygon = Polygon(s)
+          area.append(polygon.area)
+          polygons.append(polygon)
+        except ValueError:
+          continue 
+#        polygon = Polygon(s)
+#        area.append(polygon.area)
+#        polygons.append(polygon)
     return polygons        
 
 
