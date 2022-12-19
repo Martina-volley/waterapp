@@ -115,10 +115,12 @@ def mask_to_polygon(maskfile):
 def object_detection_image(file,learn):
     scale=round((5.36+6.65+7.77)/3)
     unit=scale**2/10000
-    st.title('Waterway Detection for Images')
-    st.subheader("""
-    This app will detect the waterway in an image and outputs the image with polygons.
-    """)
+#    st.title('Waterway Detection for Images')
+#    st.subheader("""
+#    This app will detect the waterway in an image and outputs the image with polygons.
+#    """)
+    subheader='<p style="font-size: 25px;font-weight: 500;color:teal;">Waterway Detection Results </p>'
+    st.markdown(subheader, unsafe_allow_html=True)
     #file = st.file_uploader('Upload Image', type = ['jpg','png','jpeg'])
     if file!= None:
         #st.write("Image Uploaded Successfully:")
@@ -176,15 +178,19 @@ def object_detection_image(file,learn):
 
 
 def main():
-    new_title = '<p style="font-size: 42px;">Demo: welcome to waterway detection </p>'
-    read_me_0 = st.markdown(new_title, unsafe_allow_html=True)
-
+#    new_title = '<p style="font-size: 42px;">Demo: welcome to waterway detection </p>'
+#    read_me_0 = st.markdown(new_title, unsafe_allow_html=True)
+#    st.title()
 #    read_me = st.markdown("""
 #    This Web app is for image model demo and test usage!"""
 #    )
 #    st.sidebar.title("Select Activity")
 #    choice  = st.sidebar.selectbox("MODE",("About","Detection(Image)","(Coming soon) Detection(Video)"))
-    read_me_0.empty()
+    new_title = '<p style="font-size: 38px; color:teal;font-weight: bold;">Welcome to waterway detection demo </p>'
+    st.markdown(new_title, unsafe_allow_html=True)
+    readme='<p style="font-size: 20px">This app will detect the waterway in an image and outputs the image with polygons. </p>'
+    st.markdown(readme, unsafe_allow_html=True)
+
     st.write(f'Prepare the Model, please wait!') 
     waterway_model_file='model_version_1.pkl'
     url='https://www.dropbox.com/s/1khic5wgtwzf2x7/model_v1.pkl?dl=0'
