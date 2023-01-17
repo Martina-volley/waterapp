@@ -6,7 +6,7 @@ import os,glob
 import numpy as np
 import torch
 import copy
-
+from math import sqrt, ceil, floor
 
 from fastai.vision.core import *
 from fastai.vision.data import *
@@ -240,7 +240,7 @@ def object_detection_image(file,target=None,num=None):
         if num != None:
             slice_data=silcer(img,fname,num_tiles=num,save=False) # cropped data 
         else:
-            slice_data=silcer(img,fname,num_tiles=100,save=False) # cropped data
+            slice_data=silcer(img,fname,num_tiles=30,save=False) # cropped data
             
         data=slice_data['crop_image']
         
@@ -333,6 +333,7 @@ def main():
         
         if st.button('Classify'):
 #            object_detection_image(file)
+            st.write("Image dection calculating...plz be patient (~ 2-5 mins)")
             object_detection_image(img,option)
             #pred, pred_idx, probs = learn_inf.predict(img)
             #st.write(f'Prediction: {pred}; Probability: {probs[pred_idx]:.04f}')
