@@ -223,7 +223,7 @@ def rescale(prediction):
 
 
 
-def object_detection_image(file,target=None,num=None):
+def object_detection_image(file,learn,target=None,num=None):
     st.title('Waterway Detection for Images')
     st.subheader("""
     This app will detect the waterway in an image and output the image with polygons.
@@ -255,7 +255,7 @@ def object_detection_image(file,target=None,num=None):
             image=subdata.image # PIL obj
             img_fastai = np.array(subdata.image)
             orgsz=img_fastai.shape
-            pred = learn_inf.predict(img_fastai) # image tensor
+            pred = learn.predict(img_fastai) # image tensor
             rescaled = rescale(pred) # np array
             ind=np.unique(pred[0].numpy())
             if len(ind)>=2:
@@ -334,7 +334,7 @@ def main():
         if st.button('Classify'):
 #            object_detection_image(file)
             st.write("Image dection calculating...plz be patient (~ 2-5 mins)")
-            object_detection_image(img,option)
+            object_detection_image(img,learn_inf,option)
             #pred, pred_idx, probs = learn_inf.predict(img)
             #st.write(f'Prediction: {pred}; Probability: {probs[pred_idx]:.04f}')
         else : 
