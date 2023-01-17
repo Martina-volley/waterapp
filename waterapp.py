@@ -96,21 +96,27 @@ def maskimage_to_apply(fraw,fmask,classname=None):
     maskinfo['classname']=classname  #maskname
     maskinfo['data']=masked_image
     return maskinfo#masked_image 
+        
 
 def mask_to_polygon(maskfile):
     maskarr = maskfile #np.array(msk)
     contours, hierarchy= cv2.findContours(maskarr, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE, offset=(-1, -1))
     area=[]
     polygons=[]
-    #print(len(contours))
     for poly in contours:
         #print(cv2.contourArea(poly))
         s=poly.tolist()
         s=[ x[0]  for x in s]
-        polygon = Polygon(s)
-        area.append(polygon.area)
-        polygons.append(polygon)
-    return polygons        
+        try:
+          polygon = Polygon(s)
+          area.append(polygon.area)
+          polygons.append(polygon)
+        except ValueError:
+          continue 
+#        polygon = Polygon(s)
+#        area.append(polygon.area)
+#        polygons.append(polygon)
+    return polygons 
 
 
 
