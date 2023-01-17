@@ -7,6 +7,7 @@ import numpy as np
 import torch
 import copy
 from math import sqrt, ceil, floor
+Image.MAX_IMAGE_PIXELS=None
 
 from fastai.vision.core import *
 from fastai.vision.data import *
@@ -341,7 +342,7 @@ def main():
         
         if st.button('Classify'):
 #            object_detection_image(file)
-            st.write("Image dection calculating...plz be patient (~ 2-5 mins)")
+            st.write("Image dection calculating...")
             object_detection_image(img,learn_inf,option)
             #pred, pred_idx, probs = learn_inf.predict(img)
             #st.write(f'Prediction: {pred}; Probability: {probs[pred_idx]:.04f}')
