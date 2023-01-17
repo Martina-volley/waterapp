@@ -248,7 +248,7 @@ def object_detection_image(file,learn,target=None,num=None):
         if num != None:
             slice_data=silcer(img,fname,num_tiles=num,save=False) # cropped data 
         else:
-            slice_data=silcer(img,fname,num_tiles=30,save=False) # cropped data
+            slice_data=silcer(img,fname,num_tiles=100,save=False) # cropped data
             
         data=slice_data['crop_image']
         
@@ -290,7 +290,7 @@ def object_detection_image(file,learn,target=None,num=None):
               subdata.image=image
         
         pred_img=imgjoin(data)
-        st.image(pred_img, caption='Proccesed Image.')
+        st.image(pred_img, caption='Proccesed Image.', width=400)
         st.write(pd.DataFrame({
             'Target Name': [str(target)],
             'Target Area (m2)': [round(sum(all_area),2)]}))
@@ -334,7 +334,7 @@ def main():
     if file!= None:
         st.write("Image Uploaded Successfully:")
         img=Image.open(file)
-        st.image(img, caption = "Uploaded Image", width=500)
+        st.image(img, caption = "Uploaded Image", width=200)
         
         option = st.selectbox('Choose your target:',("pond","waterway","wgrass"))
         st.write('Your target:', option)
