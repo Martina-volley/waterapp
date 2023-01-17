@@ -280,51 +280,8 @@ def object_detection_image(file,target=None,num=None):
 #              img2.save(path.joinpath(imgpath,'de_'+'{0:02d}'.format(i)+'.png'))
             else:
               subdata.image=image
-        pred_img=imgjoin(data)
-
-'''
-        pred = learn_inf.predict(img)
-        test=pred[0].numpy()
-        test[test == 1]=60
-        test[test == 2]=60*2
-        test[test == 3]=60*3
-        test[test == 4]=60*4
-        #pred_arg=test
-        ind=np.unique(test)
-        if len(ind)>=2:
-          #rescaled = (255.0 / pred_arg.max() * (pred_arg - pred_arg.min())).astype(np.uint8)
-          rescaled=test
-          maskimg = Image.fromarray(rescaled.astype(np.uint8))
-          szm=maskimg.shape
-          img=img.resize((szm[1],szm[0]))
-          #test=np.array(Image.fromarray(rescaled).resize((sz[1],sz[0])))
-          stacked_img = np.stack((rescaled,)*3, axis=-1)
-          maskinfo=maskimage_to_apply(img,stacked_img)
-          #print(maskinfo['classname'])
-          #plt.imshow(maskinfo['data'])
-          img2 = Image.fromarray(maskinfo['data'])
-          draw = ImageDraw.Draw(img2)
-          obj_list=[ x[1] for x in maskinfo['classname']]
-          polys=mask_to_polygon(rescaled.astype(np.uint8))
-          area=[]
-          for x in polys:
-              cx = x.representative_point().x
-              cy = x.representative_point().y
-              draw.text((cx,cy), '{:8.1f}'.format(x.area*unit), stroke_fill=(255, 0, 0),fill=255,font=font)
-              area.append(x.area)
-              #img2.save(save_path/'imagesave.png')
-        else:
-          print('no results')
-          
-       # df= pd.DataFrame(list(zip(obj_list,area)),columns=['Object Name','Area'])
-        #df= pd.DataFrame(list(zip(obj_list,confi_list)),columns=['Object Name','Confidence'])
         
-#        if st.checkbox("Show Object's list" ): 
-#            st.write(df)
-#        if st.checkbox("Show Confidence bar chart" ):
-#            st.subheader('Bar chart for confidence levels')
-#            st.bar_chart(df["Area"]) 
-'''            
+        pred_img=imgjoin(data)
         st.image(pred_img, caption='Proccesed Image.')
         st.write(pd.DataFrame({
             'Target Name': [str(target)],
