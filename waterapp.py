@@ -7,7 +7,6 @@ import numpy as np
 import torch
 import copy
 from math import sqrt, ceil, floor
-Image.MAX_IMAGE_PIXELS=None
 
 from fastai.vision.core import *
 from fastai.vision.data import *
@@ -21,7 +20,7 @@ from shapely.geometry import Polygon
 import requests
 import shutil
 from tqdm import tqdm
-
+Image.MAX_IMAGE_PIXELS=None
 
 def download_file(url,filename,path=None):
     #local_filename = url.split('/')[-1]
