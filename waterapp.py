@@ -236,6 +236,8 @@ def object_detection_image(file,learn,target=None,num=None):
         #st.image(img, caption = "Uploaded Image")
         img=file #Image.open(files)
         fname='uploadfile'
+        scale=round((5.36+6.65+7.77)/3)
+        unit=scale**2/10000
         
         if num != None:
             slice_data=silcer(img,fname,num_tiles=num,save=False) # cropped data 
